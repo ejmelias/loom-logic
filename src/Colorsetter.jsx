@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 
-function Colorsetter({ colors, setColors, currentColor, orient }) {
+function Colorsetter({ draft, currentColor, orient }) {
 
     const length = colors.length;
     const [isMouseDown, setIsMouseDown] = useState(false);

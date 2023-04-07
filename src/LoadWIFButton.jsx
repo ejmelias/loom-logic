@@ -11,13 +11,10 @@ function LoadWIFButton ({ setShafts, setPedals, setThreading, setPedalling, setT
             const data = decodeINI(e.target.result);
 
             try {
-                //console.log(data)
+                console.log(data)
 
                 const shafts = parseInt(data.WEAVING.Shafts);
                 const pedals = parseInt(data.WEAVING.Treadles);
-                setShafts(shafts);
-                setPedals(pedals);
-                
 
                 // Tie-up
                 const tieup = Array.from({ length: shafts}, () => Array.from({ length: pedals }).fill(0))
@@ -28,12 +25,7 @@ function LoadWIFButton ({ setShafts, setPedals, setThreading, setPedalling, setT
                     }
                 });
 
-                // Threading
-                //console.log(data.THREADING)
-                //const newDimensions = {warp: 48, weft: 50, shafts: parseInt(data.WEAVING.Shafts), pedals: parseInt(data.WEAVING.Treadles) };
-                //setDimensions(newDimensions)
 
-                //setTieup(tieup);
 
             } catch(error) {
                 alert("An error occured while loading the selected file.");
