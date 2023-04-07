@@ -47,7 +47,7 @@ function DownloadPDFButton ({ draft }) {
             for(let i = 0; i < pattern.length; i++) {
                 for(let j = 0; j < pattern[i].length; j++) {
                     if(pattern[i][j] > 0) {
-                        painterObject.rect(j * size, (i * size) + (7 * size), size, size).fillAndStroke(draft,ThreadColors[j], 'gray').lineWidth(0.5);
+                        painterObject.rect(j * size, (i * size) + (7 * size), size, size).fillAndStroke(draft.ThreadColors[j], 'gray').lineWidth(0.5);
                     } else {
                         painterObject.rect(j * size, (i * size) + (7 * size), size, size).fillAndStroke(draft.PedalColors[j], 'gray').lineWidth(0.5);
                     }

@@ -47,6 +47,7 @@ function App() {
                     <div><Toggle value={showGrid} setValue={setShowGrid}>Pattern grid</Toggle></div>
                     <div><Toggle value={multipedalling} setValue={setMultipedaling}>Multi-treadling</Toggle></div>
                 </div>
+                <LoadWIFButton draft={draft} updateDraft={updateDraft}/>
                 <DownloadPDFButton draft={draft}/>
             </div>
             <div className="">
