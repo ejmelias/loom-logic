@@ -21,7 +21,6 @@ function Pattern({ draft, grid }) {
                     </div>
                 ))}
             </div>
-            
         </div>
     );
 }

@@ -3,16 +3,15 @@ import { multiply, transpose, resize } from 'mathjs';
 import { useImmer } from 'use-immer';
 import Pattern from './Pattern'
 import Toggle from './Toggle'
-import SizeSelector from './SizeSelector'
 import ColorPicker from './ColorPicker';
 import DownloadPDFButton from './DownloadPDFButton';
 import LoadWIFButton from './LoadWIFButton';
 import Threading from './Threading';
 import Pedalling from './Pedalling';
 import Tieup from './Tieup';
+import ShaftSelector from './ShaftSelector';
+import PedalSelector from './PedalSelector';
 
-const patternWidth = 48; //warp
-const patternHeight = 50; //weft
 const shaftValues = [4, 8, 12, 16, 24, 32];
 const pedalValues = [4, 6, 8, 10, 12, 14];
 
@@ -28,8 +27,6 @@ const initialDraft = {
     PedalColors: Array.from({ length: 50 }).fill('#FFFFFF'),
 }
 
-
-
 function App() {
     //console.log("render")
 
@@ -38,7 +35,6 @@ function App() {
     const [currentColor, setCurrentColor] = useState('#7c3aed');
 
     const [draft, updateDraft] = useImmer(initialDraft);
-    const [pattern, setPattern] = useState(Array.from({ length: initialDraft.Weft }, () => Array.from({ length: initialDraft.Warp }).fill(0)))
 
     const [pedalIsEmpty, setPedalIsEmpty] = useState(Array.from({ length: initialDraft.Weft }).fill(true));
 
@@ -109,6 +105,8 @@ function App() {
     return (
         <div className='grid grid-flow-col auto-cols-max bg-gray-200' onDragStart={(e) => {e.preventDefault()}} draggable={false}>
             <div className='m-2 p-2 border rounded-md border-gray-300 bg-gray-50 shadow-sm'>
+                <div><ShaftSelector draft={draft} updateDraft={updateDraft} values={shaftValues}/></div>
+                <div><PedalSelector draft={draft} updateDraft={updateDraft} values={pedalValues}/></div>
                 <ColorPicker color={currentColor} onChange={setCurrentColor} />
                 <div className='divide-y'>
                     <div><Toggle value={showGrid} setValue={setShowGrid}>Pattern grid</Toggle></div>
