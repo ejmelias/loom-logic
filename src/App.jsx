@@ -9,6 +9,7 @@ import DownloadPDFButton from './DownloadPDFButton';
 import LoadWIFButton from './LoadWIFButton';
 import Threading from './Threading';
 import Pedalling from './Pedalling';
+import Tieup from './Tieup';
 
 const patternWidth = 48; //warp
 const patternHeight = 50; //weft
@@ -78,36 +79,51 @@ function App() {
     useEffect(() => {
         setPattern(multiply(multiply(pedalling, transpose(tieup)), threading))
     },[tieup, threading, pedalling])*/
-
+    /*
     return (
         <div className='flex bg-gray-200' onDragStart={(e) => {e.preventDefault()}} draggable={false}>
-            {/*<div className='m-2 p-2 border rounded-md border-gray-300 bg-gray-50 shadow-sm'>
+            <div className='m-2 p-2 border rounded-md border-gray-300 bg-gray-50 shadow-sm'>{/*
                 <div><SizeSelector values={shaftValues} current={shafts} setCurrent={setShafts}>Shafts</SizeSelector></div>
                 <div><SizeSelector values={pedalValues} current={pedals} setCurrent={setPedals}>Treadles</SizeSelector></div>
-    <ColorPicker color={currentColor} onChange={setCurrentColor} />*/}
+                <ColorPicker color={currentColor} onChange={setCurrentColor} />
                 <div className='divide-y'>
                     <div><Toggle value={showGrid} setValue={setShowGrid}>Pattern grid</Toggle></div>
                     <div><Toggle value={multipedalling} setValue={setMultipedaling}>Multi-treadling</Toggle></div>
-                </div>{/*
+                </div>
                 <LoadWIFButton setShafts={setShafts} setPedals={setPedals} setTieup={setTieup} />
                 <DownloadPDFButton threading={threading} threadColors={threadColors} tieup={tieup} pedalling={pedalling} pedalColors={pedalColors} pattern={pattern} />
-    </div>*/}
-            <ColorPicker color={currentColor} onChange={setCurrentColor} />
-            <div className="grid auto-rows-max grid-flow-row justify-center">
-                {/*<div className='row' >
-                    <Colorsetter draft={draft} currentColor={currentColor} orient="horizontal" />
-                </div>
-                <div className='grid auto-cols-max grid-flow-col' >
-                    <Grid data={threading} setData={setThreading} type='threading' />
-                    <Grid data={tieup} setData={setTieup} />
+            </div>
+            <div className="">
+                <div className='flex content-end' >
+                    <Threading draft={draft} updateDraft={updateDraft} currentColor={currentColor} />   
+                    <Tieup draft={draft} updateDraft={updateDraft} />
                 </div>
                 <div className='grid auto-cols-max grid-flow-col' >
                     <Pattern data={pattern} grid={showGrid} draft={draft} isEmpty={pedalIsEmpty} />
-                    <Grid data={pedalling} setData={setPedalling} multi={multipedalling} type='pedalling'  isEmpty={pedalIsEmpty} setIsEmpty={setPedalIsEmpty}/>
-                    <Colorsetter colors={pedalColors} setColors={setPedalColors} currentColor={currentColor} orient="vertical" />
-</div>*/}
-                <Threading draft={draft} updateDraft={updateDraft} currentColor={currentColor} />
-                <Pedalling draft={draft} updateDraft={updateDraft} currentColor={currentColor} multi={multipedalling} />
+                    <Pedalling draft={draft} updateDraft={updateDraft} currentColor={currentColor} multi={multipedalling} />
+                </div>
+            </div>
+        </div>
+    )*/
+
+    return (
+        <div className='grid grid-flow-col auto-cols-max bg-gray-200' onDragStart={(e) => {e.preventDefault()}} draggable={false}>
+            <div className='m-2 p-2 border rounded-md border-gray-300 bg-gray-50 shadow-sm'>
+                <ColorPicker color={currentColor} onChange={setCurrentColor} />
+                <div className='divide-y'>
+                    <div><Toggle value={showGrid} setValue={setShowGrid}>Pattern grid</Toggle></div>
+                    <div><Toggle value={multipedalling} setValue={setMultipedaling}>Multi-treadling</Toggle></div>
+                </div>
+            </div>
+            <div className="">
+                <div className='grid grid-flow-col auto-cols-max' >
+                    <Threading draft={draft} updateDraft={updateDraft} currentColor={currentColor} />
+                    <div className='self-end'><Tieup draft={draft} updateDraft={updateDraft} /></div>
+                </div>
+                <div className='grid grid-flow-col auto-cols-max' >
+                    <Pattern data={pattern} grid={showGrid} draft={draft} isEmpty={pedalIsEmpty} />
+                    <Pedalling draft={draft} updateDraft={updateDraft} currentColor={currentColor} multi={multipedalling} />
+                </div>
             </div>
         </div>
     )
