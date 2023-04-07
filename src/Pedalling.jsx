@@ -1,4 +1,18 @@
+import { useRef, useState } from 'react';
+
 function Pedalling({ draft, updateDraft, currentColor, multi }) {
+
+    const [isMouseDown, setIsMouseDown] = useState(false);
+    const colorRef = useRef()
+
+    function handleColorDrag(event) {
+        if (isMouseDown) {
+            const row = Math.floor((event.nativeEvent.clientY - colorRef.current.getBoundingClientRect().top) / 20);
+            if(row < draft.PedalColors.length) {
+                updateDraft(draft => { draft.PedalColors[row] = currentColor });
+            }
+        }
+    }
 
     function handleColorClick(id) {
         updateDraft(draft => {draft.PedalColors[id] = currentColor});
@@ -24,7 +38,7 @@ function Pedalling({ draft, updateDraft, currentColor, multi }) {
 
     return (
         <div className="flex">
-            <div className='max-w-max m-2 grid grid-flow-row auto-rows-max border border-black '>
+            <div className='max-w-max m-2 grid grid-flow-row auto-rows-max border border-black'>
                 {draft.Pedalling.map((row, i) => (
                     <div key={i} className="grid grid-flow-col auto-cols-max">
                         {row.map((cell, j) => (
@@ -37,7 +51,13 @@ function Pedalling({ draft, updateDraft, currentColor, multi }) {
                     </div>
                 ))}
             </div>
-            <div className="grid-flow-row auto-rows-max max-w-max m-2 grid border border-black">
+            <div className="grid-flow-row auto-rows-max max-w-max m-2 grid border border-black"
+                onPointerDown={() => setIsMouseDown(true)}
+                onPointerUp={() => setIsMouseDown(false)}
+                onPointerMove={handleColorDrag}
+                onPointerLeave={() => {setIsMouseDown(false)}}
+                ref={colorRef}
+            >
                 {draft.PedalColors.map((cell, i) => (
                     <div 
                         key={i}

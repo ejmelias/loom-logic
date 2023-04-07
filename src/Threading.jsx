@@ -1,4 +1,18 @@
+import { useState, useRef } from "react";
+
 function Threading({ draft, updateDraft, currentColor }) {
+
+    const [isMouseDown, setIsMouseDown] = useState(false);
+    const colorRef = useRef()
+
+    function handleColorDrag(event) {
+        if (isMouseDown) {
+            const col = Math.floor((event.nativeEvent.clientX - colorRef.current.getBoundingClientRect().left) / 20);
+            if(col >= 0 && col < draft.ThreadColors.length) {
+                updateDraft(draft => { draft.ThreadColors[col] = currentColor });
+            }
+        }
+    }
 
     function handleColorClick(id) {
         updateDraft(draft => {draft.ThreadColors[id] = currentColor});
@@ -21,7 +35,13 @@ function Threading({ draft, updateDraft, currentColor }) {
 
     return (
         <div>
-            <div className="grid-flow-col auto-cols-max max-w-max m-2 grid border border-black">
+            <div className="grid-flow-col auto-cols-max max-w-max m-2 grid border border-black"
+                onPointerDown={() => setIsMouseDown(true)}
+                onPointerUp={() => setIsMouseDown(false)}
+                onPointerMove={handleColorDrag}
+                onPointerLeave={() => {setIsMouseDown(false)}}
+                ref={colorRef}
+            >
                 {draft.ThreadColors.map((cell, i) => (
                     <div 
                         key={i}
