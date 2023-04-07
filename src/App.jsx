@@ -25,7 +25,7 @@ const initialDraft = {
     Tieup: Array.from({ length: 4 }, () => Array.from({ length: 4 }).fill(0)),
     Pedalling: Array.from({ length: 50 }, () => Array.from({ length: 4 }).fill(0)),
     ThreadColors: Array.from({ length: 48 }).fill('#7c3aed'),
-    PedalColors: Array.from({ length: 50 }).fill('#7c3aed'),
+    PedalColors: Array.from({ length: 50 }).fill('#FFFFFF'),
 }
 
 
@@ -121,7 +121,7 @@ function App() {
                     <div className='self-end'><Tieup draft={draft} updateDraft={updateDraft} /></div>
                 </div>
                 <div className='grid grid-flow-col auto-cols-max' >
-                    <Pattern data={pattern} grid={showGrid} draft={draft} isEmpty={pedalIsEmpty} />
+                    <Pattern draft={draft} grid={showGrid}/>
                     <Pedalling draft={draft} updateDraft={updateDraft} currentColor={currentColor} multi={multipedalling} />
                 </div>
             </div>

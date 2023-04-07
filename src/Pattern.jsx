@@ -1,15 +1,21 @@
+import { multiply, transpose } from "mathjs";
 
-function Pattern({ data, grid, pedalColors, threadColors, isEmpty }) { 
+function Pattern({ draft, grid }) { 
+
+    const pedalling = JSON.parse(JSON.stringify(draft.Pedalling));
+    const tieup = JSON.parse(JSON.stringify(draft.Tieup));
+    const threading = JSON.parse(JSON.stringify(draft.Threading));
+    const pattern = multiply(multiply(pedalling, transpose(tieup)), threading)
 
     return (
         <div>
             <div className='max-w-max m-2 grid grid-flow-row auto-rows-max border border-black'>
-                {data.map((row, i) => (
+                {pattern.map((row, i) => (
                     <div key={i} className="grid grid-flow-col auto-cols-max">
                         {row.map((cell, j) => (
                             <div className={`h-5 w-5 ${grid ? "border-[0.5px]" : ""}`}
                                 key={[i,j]}
-                                style={{ backgroundColor: cell > 0 ? threadColors[j] : (isEmpty[i] ? '#FFFFFF' : pedalColors[i]) }}
+                                style={{ backgroundColor: cell > 0 ? draft.ThreadColors[j] :  draft.PedalColors[i] }}
                             />
                         ))}
                     </div>

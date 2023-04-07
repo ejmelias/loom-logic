@@ -1,6 +1,5 @@
 function Tieup({ draft, updateDraft }) {
 
-
     function handleTieupClick(id) {
         updateDraft(draft => {
             if(draft.Tieup[id[0]][id[1]] === 0) {
