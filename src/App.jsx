@@ -1,5 +1,4 @@
-import { useState, useMemo, useEffect, useLayoutEffect,  } from 'react';
-import { multiply, transpose, resize } from 'mathjs';
+import { useState, useMemo, useEffect, } from 'react';
 import { useImmer } from 'use-immer';
 import Pattern from './Pattern'
 import Toggle from './Toggle'
@@ -38,70 +37,6 @@ function App() {
 
     const [pedalIsEmpty, setPedalIsEmpty] = useState(Array.from({ length: initialDraft.Weft }).fill(true));
 
-/*
-    useEffect(() => {
-        const newTieup = [...tieup];
-        const newPedalling = [...pedalling];
-
-        while(pedals > newTieup[0].length) { // # pedals increased, push cells onto each row 
-            newTieup.map((row) => { row.push(0) });
-            newPedalling.map((row) => { row.push(0) });
-        }
-
-        while(pedals < newTieup[0].length) { // # pedals decreased, pop cells off each row
-            newTieup.map((row) => { row.pop() });
-            newPedalling.map((row) => { row.pop() });
-        }
-        setTieup(newTieup);
-        setPedalling(newPedalling);
-    },[pedals]);
-
-    useEffect(() => {
-        const newTieup = [...tieup];
-        const newThreading = [...threading];
-
-        while(shafts > newTieup.length) { // # shafts increased, unshift rows onto the front
-            newTieup.unshift(Array.from({ length: pedals }).fill(0));
-            newThreading.unshift(Array.from({ length: dimensions.warp }).fill(0));
-        }
-        while(shafts < newTieup.length) { // # shafts decreased, shift rows off the front
-            newTieup.shift();
-            newThreading.shift();
-        }
-        setTieup(newTieup);
-        setThreading(newThreading);
-    },[shafts]);
-
-    useEffect(() => {
-        setPattern(multiply(multiply(pedalling, transpose(tieup)), threading))
-    },[tieup, threading, pedalling])*/
-    /*
-    return (
-        <div className='flex bg-gray-200' onDragStart={(e) => {e.preventDefault()}} draggable={false}>
-            <div className='m-2 p-2 border rounded-md border-gray-300 bg-gray-50 shadow-sm'>{/*
-                <div><SizeSelector values={shaftValues} current={shafts} setCurrent={setShafts}>Shafts</SizeSelector></div>
-                <div><SizeSelector values={pedalValues} current={pedals} setCurrent={setPedals}>Treadles</SizeSelector></div>
-                <ColorPicker color={currentColor} onChange={setCurrentColor} />
-                <div className='divide-y'>
-                    <div><Toggle value={showGrid} setValue={setShowGrid}>Pattern grid</Toggle></div>
-                    <div><Toggle value={multipedalling} setValue={setMultipedaling}>Multi-treadling</Toggle></div>
-                </div>
-                <LoadWIFButton setShafts={setShafts} setPedals={setPedals} setTieup={setTieup} />
-                <DownloadPDFButton threading={threading} threadColors={threadColors} tieup={tieup} pedalling={pedalling} pedalColors={pedalColors} pattern={pattern} />
-            </div>
-            <div className="">
-                <div className='flex content-end' >
-                    <Threading draft={draft} updateDraft={updateDraft} currentColor={currentColor} />   
-                    <Tieup draft={draft} updateDraft={updateDraft} />
-                </div>
-                <div className='grid auto-cols-max grid-flow-col' >
-                    <Pattern data={pattern} grid={showGrid} draft={draft} isEmpty={pedalIsEmpty} />
-                    <Pedalling draft={draft} updateDraft={updateDraft} currentColor={currentColor} multi={multipedalling} />
-                </div>
-            </div>
-        </div>
-    )*/
-
     return (
         <div className='grid grid-flow-col auto-cols-max bg-gray-200' onDragStart={(e) => {e.preventDefault()}} draggable={false}>
             <div className='m-2 p-2 border rounded-md border-gray-300 bg-gray-50 shadow-sm'>
@@ -112,6 +47,7 @@ function App() {
                     <div><Toggle value={showGrid} setValue={setShowGrid}>Pattern grid</Toggle></div>
                     <div><Toggle value={multipedalling} setValue={setMultipedaling}>Multi-treadling</Toggle></div>
                 </div>
+                <DownloadPDFButton draft={draft}/>
             </div>
             <div className="">
                 <div className='grid grid-flow-col auto-cols-max' >

@@ -1,5 +1,6 @@
 import { pdf, Document, Page, Text, StyleSheet, Canvas } from '@react-pdf/renderer';
 import { saveAs } from 'file-saver';
+import { multiply, transpose } from "mathjs";
 
 const styles = StyleSheet.create({
     page: {
@@ -18,14 +19,19 @@ const styles = StyleSheet.create({
     }
 });
 
-function DownloadPDFButton ({ pattern, threading, pedalling, tieup, pedalColors, threadColors }) {
+function DownloadPDFButton ({ draft }) {
     
     const handleDownload = async () => {
+        const pedalling = JSON.parse(JSON.stringify(draft.Pedalling));
+        const tieup = JSON.parse(JSON.stringify(draft.Tieup));
+        const threading = JSON.parse(JSON.stringify(draft.Threading));
+        const pattern = multiply(multiply(pedalling, transpose(tieup)), threading)
+
         const size = (pattern[0].length + pedalling[0].length) * 0.125;
         const paint = (painterObject) => {
 
-            for(let i = 0; i < threadColors.length; i++) {
-                painterObject.rect(i * size, 0, size, size).fillAndStroke(threadColors[i], 'black').lineWidth(0.5);
+            for(let i = 0; i < draft.ThreadColors.length; i++) {
+                painterObject.rect(i * size, 0, size, size).fillAndStroke(draft.ThreadColors[i], 'black').lineWidth(0.5);
             }
 
             for(let i = 0; i < threading.length; i++) {
@@ -41,9 +47,9 @@ function DownloadPDFButton ({ pattern, threading, pedalling, tieup, pedalColors,
             for(let i = 0; i < pattern.length; i++) {
                 for(let j = 0; j < pattern[i].length; j++) {
                     if(pattern[i][j] > 0) {
-                        painterObject.rect(j * size, (i * size) + (7 * size), size, size).fillAndStroke(threadColors[j], 'gray').lineWidth(0.5);
+                        painterObject.rect(j * size, (i * size) + (7 * size), size, size).fillAndStroke(draft,ThreadColors[j], 'gray').lineWidth(0.5);
                     } else {
-                        painterObject.rect(j * size, (i * size) + (7 * size), size, size).fillAndStroke(pedalColors[j], 'gray').lineWidth(0.5);
+                        painterObject.rect(j * size, (i * size) + (7 * size), size, size).fillAndStroke(draft.PedalColors[j], 'gray').lineWidth(0.5);
                     }
                 }
             }
@@ -68,8 +74,8 @@ function DownloadPDFButton ({ pattern, threading, pedalling, tieup, pedalColors,
                 }
             }
 
-            for(let i = 0; i < pedalColors.length; i++) {
-                painterObject.rect(((threading[0].length + pedalling[0].length) * size) + (2 * size), (i * size) + (7 * size), size, size).fillAndStroke(pedalColors[i], 'black').lineWidth(0.5);
+            for(let i = 0; i < draft.PedalColors.length; i++) {
+                painterObject.rect(((threading[0].length + pedalling[0].length) * size) + (2 * size), (i * size) + (7 * size), size, size).fillAndStroke(draft.PedalColors[i], 'black').lineWidth(0.5);
             }
         }
         const blob = await pdf(
