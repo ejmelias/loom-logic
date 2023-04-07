@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useLayoutEffect,  } from 'react';
 import { multiply, transpose, resize } from 'mathjs';
 import Grid from './Grid'
 import Pattern from './Pattern'
@@ -9,48 +9,72 @@ import ColorPicker from './ColorPicker';
 import DownloadPDFButton from './DownloadPDFButton';
 import LoadWIFButton from './LoadWIFButton';
 
-const patternWidth = 48;
-const patternHeight = 50;
+const patternWidth = 48; //warp
+const patternHeight = 50; //weft
 const shaftValues = [4, 8, 12, 16, 24, 32];
 const pedalValues = [4, 6, 8, 10, 12, 14];
 
 function App() {
-    console.log("render")
+    //console.log("render")
 
     const [showGrid, setShowGrid] = useState(true);
     const [multipedalling, setMultipedaling] = useState(true);
     const [shafts, setShafts] = useState(shaftValues[0]);
-    const [pedals, setPedals] = useState(pedalValues[0])
+    const [pedals, setPedals] = useState(pedalValues[0]);
+    const [dimensions, setDimensions] = useState({warp: 48, weft: 50,}); //warp = width, weft = height
     
     const [currentColor, setCurrentColor] = useState('#7c3aed');
-    const [threadColors, setThreadColors] = useState(Array.from({ length: patternWidth }).fill('#7c3aed'));
-    const [pedalColors, setPedalColors] = useState(Array.from({ length: patternHeight }).fill('#d5c3a1'));
+    const [threadColors, setThreadColors] = useState(Array.from({ length: dimensions.warp }).fill('#7c3aed'));
+    const [pedalColors, setPedalColors] = useState(Array.from({ length: dimensions.weft }).fill('#d5c3a1'));
     
-    const [threading, setThreading] = useState(Array.from({ length: shafts }, () => Array.from({ length: patternWidth }).fill(0)));
-    const [pedalling, setPedalling] = useState(Array.from({ length: patternHeight}, () => Array.from({ length: pedals }).fill(0)));
+    const [threading, setThreading] = useState(Array.from({ length: shafts }, () => Array.from({ length: dimensions.warp }).fill(0)));
+    const [pedalling, setPedalling] = useState(Array.from({ length: dimensions.weft}, () => Array.from({ length: pedals }).fill(0)));
     const [tieup, setTieup] = useState(Array.from({ length: shafts}, () => Array.from({ length: pedals }).fill(0)));
-    const [pedalIsEmpty, setPedalIsEmpty] = useState(Array.from({ length: patternHeight }).fill(true));
+    const [pattern, setPattern] = useState(Array.from({ length: dimensions.weft }, () => Array.from({ length: dimensions.warp }).fill(0)))
+    const [pedalIsEmpty, setPedalIsEmpty] = useState(Array.from({ length: dimensions.weft }).fill(true));
 
-    /**
-     * Determining the pattern is accomplished through matrix multiplication
-     * pattern = (pedalling) x (transposed tie-up) x (threading)
-     */
-    const pattern = multiply(multiply(pedalling, transpose(tieup)), threading);
 
-    // NOTE: could rotate matrix 180 and back to add/remove rows from top. Could use this for extending pattern width.
-    useMemo(() => {
-        setTieup(resize(tieup, [shafts, pedals]))
-        setThreading(resize(threading, [shafts, patternWidth]));
-    }, [shafts])
+    useEffect(() => {
+        const newTieup = [...tieup];
+        const newPedalling = [...pedalling];
 
-    useMemo(() => {
-        setTieup(resize(tieup, [shafts, pedals]))
-        setPedalling(resize(pedalling, [patternHeight, pedals]));
-    }, [pedals])
+        while(pedals > newTieup[0].length) { // # pedals increased, push cells onto each row 
+            newTieup.map((row) => { row.push(0) });
+            newPedalling.map((row) => { row.push(0) });
+        }
+
+        while(pedals < newTieup[0].length) { // # pedals decreased, pop cells off each row
+            newTieup.map((row) => { row.pop() });
+            newPedalling.map((row) => { row.pop() });
+        }
+        setTieup(newTieup);
+        setPedalling(newPedalling);
+    },[pedals]);
+
+    useEffect(() => {
+        const newTieup = [...tieup];
+        const newThreading = [...threading];
+
+        while(shafts > newTieup.length) { // # shafts increased, unshift rows onto the front
+            newTieup.unshift(Array.from({ length: pedals }).fill(0));
+            newThreading.unshift(Array.from({ length: dimensions.warp }).fill(0));
+        }
+        while(shafts < newTieup.length) { // # shafts decreased, shift rows off the front
+            newTieup.shift();
+            newThreading.shift();
+        }
+        setTieup(newTieup);
+        setThreading(newThreading);
+    },[shafts]);
+
+    useEffect(() => {
+        setPattern(multiply(multiply(pedalling, transpose(tieup)), threading))
+    },[tieup, threading, pedalling])
 
     return (
         <div className='flex bg-gray-200' onDragStart={(e) => {e.preventDefault()}} draggable={false}>
             <div className='m-2 p-2 border rounded-md border-gray-300 bg-gray-50 shadow-sm'>
+                <button onClick={() => {setPedals(8); setShafts(8);}}>test</button>
                 <div><SizeSelector values={shaftValues} current={shafts} setCurrent={setShafts}>Shafts</SizeSelector></div>
                 <div><SizeSelector values={pedalValues} current={pedals} setCurrent={setPedals}>Treadles</SizeSelector></div>
                 <ColorPicker color={currentColor} onChange={setCurrentColor} />
@@ -58,7 +82,7 @@ function App() {
                     <div><Toggle value={showGrid} setValue={setShowGrid}>Pattern grid</Toggle></div>
                     <div><Toggle value={multipedalling} setValue={setMultipedaling}>Multi-treadling</Toggle></div>
                 </div>
-                <LoadWIFButton setShafts={setShafts} setPedals={setPedals} />
+                <LoadWIFButton setShafts={setShafts} setPedals={setPedals} setTieup={setTieup} />
                 <DownloadPDFButton threading={threading} threadColors={threadColors} tieup={tieup} pedalling={pedalling} pedalColors={pedalColors} pattern={pattern} />
             </div>
             <div className="grid auto-rows-max grid-flow-row justify-center">

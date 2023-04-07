@@ -5,16 +5,39 @@ function LoadWIFButton ({ setShafts, setPedals, setThreading, setPedalling, setT
     const readFile = async (e) => {
 
         const file = e.target.files[0];
-        const reader = new FileReader()
+        const reader = new FileReader();
 
-        reader.onload = async (e) => { 
+        reader.onload = (e) => { 
             const data = decodeINI(e.target.result);
-            
-            if (data.WIF) {
-                console.log(data)
 
-            } else {
+            try {
+                //console.log(data)
+
+                const shafts = parseInt(data.WEAVING.Shafts);
+                const pedals = parseInt(data.WEAVING.Treadles);
+                setShafts(shafts);
+                setPedals(pedals);
+                
+
+                // Tie-up
+                const tieup = Array.from({ length: shafts}, () => Array.from({ length: pedals }).fill(0))
+                Object.keys(data.TIEUP).forEach(key => {
+                    const tie = data.TIEUP[key].split(",");
+                    for(let i = 0; i < tie.length; i++) {
+                        tieup[Math.abs((parseInt(tie[i])-1) - (shafts - 1))][key-1] = 1;
+                    }
+                });
+
+                // Threading
+                //console.log(data.THREADING)
+                //const newDimensions = {warp: 48, weft: 50, shafts: parseInt(data.WEAVING.Shafts), pedals: parseInt(data.WEAVING.Treadles) };
+                //setDimensions(newDimensions)
+
+                //setTieup(tieup);
+
+            } catch(error) {
                 alert("An error occured while loading the selected file.");
+                console.log(error);
             }
         };
         reader.readAsText(file)

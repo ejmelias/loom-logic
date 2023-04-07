@@ -1,5 +1,6 @@
-function Pattern({ data, grid, pedalColors, threadColors, isEmpty }) {   
-   
+
+function Pattern({ data, grid, pedalColors, threadColors, isEmpty }) { 
+
     return (
         <div className='max-w-max m-2 grid grid-flow-row auto-rows-max border border-black'>
             {data.map((row, i) => (
