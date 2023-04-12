@@ -17,7 +17,8 @@ function LoadWIFButton ({ draft, updateDraft, maxHeight, maxWidth }) {
                 const pedals = parseInt(data.WEAVING.Treadles);
                 const warp = (parseInt(data.WARP.Threads) > maxWidth ? maxWidth : parseInt(data.WARP.Threads))
                 const weft = (parseInt(data.WEFT.Threads) > maxHeight ? maxHeight : parseInt(data.WEFT.Threads))
-
+                const title = data.TEXT.Title;
+                
                 // Tie-up
                 const tieup = Array.from({ length: shafts}, () => Array.from({ length: pedals }).fill(0))
                 if(data.TIEUP) {
@@ -87,6 +88,7 @@ function LoadWIFButton ({ draft, updateDraft, maxHeight, maxWidth }) {
                     draft.Pedalling = pedalling;
                     draft.ThreadColors = threadColors;
                     draft.PedalColors = pedalColors;
+                    if(title) draft.Title = title; else draft.title = "Untitled";
                 });
 
             } catch(error) {
@@ -101,7 +103,10 @@ function LoadWIFButton ({ draft, updateDraft, maxHeight, maxWidth }) {
     return (
         <div className='flex justify-center my-5'>
             <div className="w-64">
-                <label htmlFor="file_input" className="inline-block font-semibold mx-2" >
+                <label htmlFor="file_input" className="inline-flex font-semibold mx-2" >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m6.75 12l-3-3m0 0l-3 3m3-3v6m-1.5-15H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                    </svg>
                     Load WIF file:
                 </label>
                 <input 
