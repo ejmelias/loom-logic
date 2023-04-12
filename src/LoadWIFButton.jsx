@@ -1,6 +1,6 @@
 import { decodeINI } from './ini'
 
-function LoadWIFButton ({ draft, updateDraft }) {
+function LoadWIFButton ({ draft, updateDraft, maxHeight, maxWidth }) {
 
     const readFile = async (e) => {
 
@@ -15,8 +15,8 @@ function LoadWIFButton ({ draft, updateDraft }) {
 
                 const shafts = parseInt(data.WEAVING.Shafts);
                 const pedals = parseInt(data.WEAVING.Treadles);
-                const warp = (parseInt(data.WARP.Threads) > 64 ? 64 : parseInt(data.WARP.Threads))
-                const weft = (parseInt(data.WEFT.Threads) > 64 ? 64 : parseInt(data.WEFT.Threads))
+                const warp = (parseInt(data.WARP.Threads) > maxWidth ? maxWidth : parseInt(data.WARP.Threads))
+                const weft = (parseInt(data.WEFT.Threads) > maxHeight ? maxHeight : parseInt(data.WEFT.Threads))
 
                 // Tie-up
                 const tieup = Array.from({ length: shafts}, () => Array.from({ length: pedals }).fill(0))

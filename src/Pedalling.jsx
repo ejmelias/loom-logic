@@ -37,7 +37,7 @@ function Pedalling({ draft, updateDraft, currentColor, multi }) {
     }
 
     return (
-        <div className="flex">
+        <div className="grid grid-flow-col auto-cols-max">
             <div className='max-w-max m-2 grid grid-flow-row auto-rows-max border border-black'>
                 {draft.Pedalling.map((row, i) => (
                     <div key={i} className="grid grid-flow-col auto-cols-max">

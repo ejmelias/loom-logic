@@ -35,7 +35,7 @@ function Threading({ draft, updateDraft, currentColor }) {
 
     return (
         <div>
-            <div className="grid-flow-col auto-cols-max max-w-max m-2 grid border border-black"
+            <div className="grid-flow-col auto-cols-max max-w-max my-4 mx-2 grid border border-black"
                 onPointerDown={() => setIsMouseDown(true)}
                 onPointerUp={() => setIsMouseDown(false)}
                 onPointerMove={handleColorDrag}
