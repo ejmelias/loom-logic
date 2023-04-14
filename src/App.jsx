@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, } from 'react';
+import { useState } from 'react';
 import { useImmer } from 'use-immer';
 import Pattern from './Pattern'
 import Toggle from './Toggle'
@@ -32,16 +32,12 @@ const initialDraft = {
 }
 
 function App() {
-    //console.log("render")
 
     const [showGrid, setShowGrid] = useState(true);
     const [multipedalling, setMultipedaling] = useState(true);
     const [currentColor, setCurrentColor] = useState('#7c3aed');
 
     const [draft, updateDraft] = useImmer(initialDraft);
-
-    //const [pedalIsEmpty, setPedalIsEmpty] = useState(Array.from({ length: initialDraft.Weft }).fill(true));
-    //e => updateDraft(draft => draft.Title = e.currentTarget.textContent)
 
     return (
         <div className='grid grid-flow-col-dense w-screen h-screen bg-gray-200 ' onDragStart={(e) => {e.preventDefault()}} draggable={false}>
