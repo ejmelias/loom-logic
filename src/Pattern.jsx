@@ -27,12 +27,12 @@ function Pattern({ draft, grid, squareSize, x, y }) {
     //draw border
     const border = useCallback((g) => {
         g.clear();
-        g.lineStyle(2, 0x00000);
+        g.lineStyle(2, 0x00000, 1, 1);
         g.drawRect(0, 0, draft.Warp * squareSize, draft.Weft * squareSize)
     }, [draft]);
 
     return ( 
-        <Container width={draft.Warp * squareSize} height={draft.Weft * squareSize} x={x} y={y} options={{ backgroundColor: 0xFFFFFF }}>
+        <Container width={draft.Warp * squareSize + 4} height={draft.Weft * squareSize + 4} x={x} y={y} options={{ backgroundColor: 0xFFFFFF }}>
             {pattern.map((row, cellY) => 
                 (row.map((cell, cellX) => (
                     <Sprite

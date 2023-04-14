@@ -48,7 +48,7 @@ function Threading({ draft, updateDraft, currentColor, squareSize, x, y }) {
     //mouse hover square
     const mouseHover = useCallback((g) => {
         g.clear();
-        g.lineStyle(3, 0x0066ff, 1, 0);
+        g.lineStyle(3, 0x0066ff, 1);
         g.drawRect(0, 0, squareSize, squareSize)
     },[])
 
@@ -60,7 +60,7 @@ function Threading({ draft, updateDraft, currentColor, squareSize, x, y }) {
             g.moveTo(squareSize * i, 0);
             g.lineTo(squareSize * i, squareSize);
         }
-        g.lineStyle(2, 0x00000);
+        g.lineStyle(2, 0x00000, 1, 1);
         g.drawRect(0, 0, draft.Warp * squareSize, squareSize)
     }, [draft]);    
     
@@ -75,15 +75,17 @@ function Threading({ draft, updateDraft, currentColor, squareSize, x, y }) {
             g.moveTo(0, squareSize * i);
             g.lineTo(draft.Warp * squareSize, squareSize * i);
         }
-        g.lineStyle(2, 0x00000);
+        g.lineStyle(2, 0x00000, 1, 1);
         g.drawRect(0, 0, draft.Warp * squareSize, draft.Shafts * squareSize)
     }, [draft]); 
 
     return (
-        <Container width={draft.Warp * squareSize} height={(draft.Shafts + 2) * squareSize} x={x} y={y} options={{ backgroundColor: 0xFFFFFF }}>
+        <Container width={draft.Warp * squareSize + 4} height={(draft.Shafts + 2) * squareSize + 4} x={x} y={y} options={{ backgroundColor: 0xFFFFFF }}>
             <Container 
-                width={draft.Warp * squareSize} 
-                height={squareSize} x={0} y={0} 
+                width={draft.Warp * squareSize + 4} 
+                height={squareSize + 4} 
+                x={0} 
+                y={0} 
                 options={{ backgroundColor: 0xFFFFFF }}
                 eventMode="static"
                 onpointerdown={() => setIsMouseDown(true)}
@@ -106,7 +108,7 @@ function Threading({ draft, updateDraft, currentColor, squareSize, x, y }) {
                 ))}
                 <Graphics draw={drawColorGrid}/>
             </Container>
-            <Container ref={containerRef} width={draft.Warp * squareSize} height={draft.Shafts * squareSize} x={0} y={2 * squareSize} options={{ backgroundColor: 0xFFFFFF }}eventMode='static' onmouseenter={()=>setHovered(true)} onmouseleave={()=>setHovered(false)} onmousemove={handleMove}>
+            <Container ref={containerRef} width={draft.Warp * squareSize + 4} height={draft.Shafts * squareSize + 4} x={0} y={2 * squareSize} options={{ backgroundColor: 0xFFFFFF }}eventMode='static' onmouseenter={()=>setHovered(true)} onmouseleave={()=>setHovered(false)} onmousemove={handleMove}>
                 {draft.Threading.map((row, i) => (
                     row.map((cell, j) => (
                         <Sprite
@@ -123,7 +125,7 @@ function Threading({ draft, updateDraft, currentColor, squareSize, x, y }) {
                     ))
                 ))}
                 <Graphics draw={drawThreadGrid}/>
-                {hovered && <Graphics ref={cursorRef} draw={mouseHover}/>}
+                <Graphics ref={cursorRef} draw={mouseHover} alpha={hovered ? 1 : 0}/>
             </Container>
         </Container>
     );

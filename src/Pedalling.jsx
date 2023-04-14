@@ -50,7 +50,7 @@ function Pedalling({ draft, updateDraft, currentColor, multi, squareSize, x, y }
     //mouse hover square
     const mouseHover = useCallback((g) => {
         g.clear();
-        g.lineStyle(3, 0x0066ff, 1, 0);
+        g.lineStyle(3, 0x0066ff, 1);
         g.drawRect(0, 0, squareSize, squareSize)
     },[])
 
@@ -62,7 +62,7 @@ function Pedalling({ draft, updateDraft, currentColor, multi, squareSize, x, y }
             g.moveTo(0, squareSize * i);
             g.lineTo(squareSize, squareSize * i);
         }
-        g.lineStyle(2, 0x00000);
+        g.lineStyle(2, 0x00000, 1, 1);
         g.drawRect(0, 0, squareSize, draft.Weft * squareSize)
     }, [draft]);    
     
@@ -77,15 +77,17 @@ function Pedalling({ draft, updateDraft, currentColor, multi, squareSize, x, y }
             g.moveTo(0, squareSize * i);
             g.lineTo(draft.Pedals * squareSize, squareSize * i);
         }
-        g.lineStyle(2, 0x00000);
+        g.lineStyle(2, 0x00000, 1, 1);
         g.drawRect(0, 0, draft.Pedals * squareSize, draft.Weft * squareSize)
     }, [draft]); 
 
     return (
-        <Container width={(draft.Pedals + 2) * squareSize} height={draft.Weft * squareSize} x={x} y={y} options={{ backgroundColor: 0xFFFFFF }}>
+        <Container width={(draft.Pedals + 2) * squareSize + 4} height={draft.Weft * squareSize + 4} x={x} y={y} options={{ backgroundColor: 0xFFFFFF }}>
             <Container 
-                width={squareSize} 
-                height={draft.Weft * squareSize} x={(draft.Pedals + 1) * squareSize} y={0} 
+                width={squareSize + 4} 
+                height={draft.Weft * squareSize + 4} 
+                x={(draft.Pedals + 1) * squareSize} 
+                y={0} 
                 options={{ backgroundColor: 0xFFFFFF }}
                 eventMode="static"
                 onpointerdown={() => setIsMouseDown(true)}
@@ -108,7 +110,7 @@ function Pedalling({ draft, updateDraft, currentColor, multi, squareSize, x, y }
                 ))}
                 <Graphics draw={drawColorGrid} />
             </Container>
-            <Container ref={containerRef} width={draft.Pedals * squareSize} height={draft.Weft * squareSize} x={0} y={0} options={{ backgroundColor: 0xFFFFFF }} eventMode='static' onmouseenter={()=>setHovered(true)} onmouseleave={()=>setHovered(false)} onmousemove={handleMove}>
+            <Container ref={containerRef} width={draft.Pedals * squareSize + 4} height={draft.Weft * squareSize + 4} x={0} y={0} options={{ backgroundColor: 0xFFFFFF }} eventMode='static' onmouseenter={()=>setHovered(true)} onmouseleave={()=>setHovered(false)} onmousemove={handleMove}>
                 {draft.Pedalling.map((row, i) => (
                     row.map((cell, j) => (
                         <Sprite
@@ -125,7 +127,7 @@ function Pedalling({ draft, updateDraft, currentColor, multi, squareSize, x, y }
                     ))
                 ))}
                 <Graphics draw={drawPedalGrid} />
-                {hovered && <Graphics ref={cursorRef} draw={mouseHover} />}
+                <Graphics ref={cursorRef} draw={mouseHover} alpha={hovered ? 1 : 0}/>
             </Container>
         </Container>
     );    

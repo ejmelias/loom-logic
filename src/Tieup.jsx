@@ -27,7 +27,7 @@ function Tieup({ draft, updateDraft, squareSize, x, y }) {
     //mouse hover square
     const mouseHover = useCallback((g) => {
         g.clear();
-        g.lineStyle(3, 0x0066ff, 1, 0);
+        g.lineStyle(3, 0x0066ff, 1);
         g.drawRect(0, 0, squareSize, squareSize)
     },[])
 
@@ -43,12 +43,12 @@ function Tieup({ draft, updateDraft, squareSize, x, y }) {
             g.moveTo(squareSize * i, 0);
             g.lineTo(squareSize * i, draft.Shafts * squareSize);
         }
-        g.lineStyle(2, 0x00000);
+        g.lineStyle(2, 0x00000, 1, 1);
         g.drawRect(0, 0, draft.Pedals * squareSize, draft.Shafts * squareSize)
     }, [draft]);    
 
     return(
-        <Container ref={containerRef} width={draft.Pedals * squareSize} height={draft.Shafts * squareSize} x={x} y={y} options={{ backgroundColor: 0xFFFFFF }} eventMode='static' onmouseenter={()=>setHovered(true)} onmouseleave={()=>setHovered(false)} onmousemove={handleMove}>
+        <Container ref={containerRef} width={draft.Pedals * squareSize + 4} height={draft.Shafts * squareSize + 4} x={x} y={y} options={{ backgroundColor: 0xFFFFFF }} eventMode='static' onmouseenter={()=>setHovered(true)} onmouseleave={()=>setHovered(false)} onmousemove={handleMove}>
             {draft.Tieup.map((row, i) => (
                 row.map((cell, j) => (
                     <Sprite
@@ -65,7 +65,7 @@ function Tieup({ draft, updateDraft, squareSize, x, y }) {
                 ))
             ))}
             <Graphics draw={draw}/>
-            {hovered && <Graphics ref={cursorRef} draw={mouseHover}/>}
+            <Graphics ref={cursorRef} draw={mouseHover} alpha={hovered ? 1 : 0}/>
         </Container>
     );
 }
