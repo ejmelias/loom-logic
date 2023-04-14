@@ -6,6 +6,9 @@ function Pedalling({ draft, updateDraft, currentColor, multi, squareSize, x, y }
 
     const [isMouseDown, setIsMouseDown] = useState(false);
     const colorRef = useRef()
+    const cursorRef = useRef();
+    const containerRef = useRef();
+    const [hovered, setHovered] = useState(false);
 
     function handleColorDrag(event) {
         if (isMouseDown) { /*
@@ -14,6 +17,12 @@ function Pedalling({ draft, updateDraft, currentColor, multi, squareSize, x, y }
                 updateDraft(draft => { draft.PedalColors[row] = currentColor });
             }*/
         }
+    }
+
+    function handleMove(e) {
+        const x = Math.floor(containerRef.current.toLocal(e.global).x / squareSize) * squareSize
+        const y = Math.floor(containerRef.current.toLocal(e.global).y / squareSize) * squareSize
+        if(cursorRef.current) cursorRef.current.position = {x: x, y: y};
     }
 
     function handleColorClick(id) {
@@ -37,6 +46,13 @@ function Pedalling({ draft, updateDraft, currentColor, multi, squareSize, x, y }
             }
         });
     }
+
+    //mouse hover square
+    const mouseHover = useCallback((g) => {
+        g.clear();
+        g.lineStyle(3, 0x0066ff, 1, 0);
+        g.drawRect(0, 0, squareSize, squareSize)
+    },[])
 
     //draw grid and border
     const drawColorGrid = useCallback((g) => {
@@ -63,7 +79,6 @@ function Pedalling({ draft, updateDraft, currentColor, multi, squareSize, x, y }
         }
         g.lineStyle(2, 0x00000);
         g.drawRect(0, 0, draft.Pedals * squareSize, draft.Weft * squareSize)
-        console.log(draft.Pedals);
     }, [draft]); 
 
     return (
@@ -93,7 +108,7 @@ function Pedalling({ draft, updateDraft, currentColor, multi, squareSize, x, y }
                 ))}
                 <Graphics draw={drawColorGrid} />
             </Container>
-            <Container width={draft.Pedals * squareSize} height={draft.Weft * squareSize} x={0} y={0} options={{ backgroundColor: 0xFFFFFF }}>
+            <Container ref={containerRef} width={draft.Pedals * squareSize} height={draft.Weft * squareSize} x={0} y={0} options={{ backgroundColor: 0xFFFFFF }} eventMode='static' onmouseenter={()=>setHovered(true)} onmouseleave={()=>setHovered(false)} onmousemove={handleMove}>
                 {draft.Pedalling.map((row, i) => (
                     row.map((cell, j) => (
                         <Sprite
@@ -110,6 +125,7 @@ function Pedalling({ draft, updateDraft, currentColor, multi, squareSize, x, y }
                     ))
                 ))}
                 <Graphics draw={drawPedalGrid} />
+                {hovered && <Graphics ref={cursorRef} draw={mouseHover} />}
             </Container>
         </Container>
     );    

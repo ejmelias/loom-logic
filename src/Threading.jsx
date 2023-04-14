@@ -6,6 +6,9 @@ function Threading({ draft, updateDraft, currentColor, squareSize, x, y }) {
 
     const [isMouseDown, setIsMouseDown] = useState(false);
     const colorRef = useRef()
+    const cursorRef = useRef();
+    const containerRef = useRef();
+    const [hovered, setHovered] = useState(false);
 
     function handleColorDrag(event) {
         if (isMouseDown) {
@@ -15,6 +18,12 @@ function Threading({ draft, updateDraft, currentColor, squareSize, x, y }) {
                 updateDraft(draft => { draft.ThreadColors[col] = currentColor });
             }*/
         }
+    }
+
+    function handleMove(e) {
+        const x = Math.floor(containerRef.current.toLocal(e.global).x / squareSize) * squareSize
+        const y = Math.floor(containerRef.current.toLocal(e.global).y / squareSize) * squareSize
+        if(cursorRef.current) cursorRef.current.position = {x: x, y: y};
     }
 
     function handleColorClick(id) {
@@ -35,6 +44,13 @@ function Threading({ draft, updateDraft, currentColor, squareSize, x, y }) {
             }
         });
     }
+
+    //mouse hover square
+    const mouseHover = useCallback((g) => {
+        g.clear();
+        g.lineStyle(3, 0x0066ff, 1, 0);
+        g.drawRect(0, 0, squareSize, squareSize)
+    },[])
 
     //draw grid and border
     const drawColorGrid = useCallback((g) => {
@@ -90,7 +106,7 @@ function Threading({ draft, updateDraft, currentColor, squareSize, x, y }) {
                 ))}
                 <Graphics draw={drawColorGrid}/>
             </Container>
-            <Container width={draft.Warp * squareSize} height={draft.Shafts * squareSize} x={0} y={2 * squareSize} options={{ backgroundColor: 0xFFFFFF }}>
+            <Container ref={containerRef} width={draft.Warp * squareSize} height={draft.Shafts * squareSize} x={0} y={2 * squareSize} options={{ backgroundColor: 0xFFFFFF }}eventMode='static' onmouseenter={()=>setHovered(true)} onmouseleave={()=>setHovered(false)} onmousemove={handleMove}>
                 {draft.Threading.map((row, i) => (
                     row.map((cell, j) => (
                         <Sprite
@@ -107,6 +123,7 @@ function Threading({ draft, updateDraft, currentColor, squareSize, x, y }) {
                     ))
                 ))}
                 <Graphics draw={drawThreadGrid}/>
+                {hovered && <Graphics ref={cursorRef} draw={mouseHover}/>}
             </Container>
         </Container>
     );

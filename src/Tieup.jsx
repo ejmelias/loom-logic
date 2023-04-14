@@ -1,8 +1,12 @@
 import { Container, Sprite, Graphics } from '@pixi/react';
-import { useCallback } from 'react';
+import { useCallback, useState, useRef } from 'react';
 import * as PIXI from 'pixi.js'
 
 function Tieup({ draft, updateDraft, squareSize, x, y }) {
+
+    const [hovered, setHovered] = useState(false);
+    const cursorRef = useRef();
+    const containerRef = useRef();
 
     function handleTieupClick(id) {
         updateDraft(draft => {
@@ -13,6 +17,19 @@ function Tieup({ draft, updateDraft, squareSize, x, y }) {
             }
         });
     }
+
+    function handleMove(e) {
+        const x = Math.floor(Math.abs(containerRef.current.toLocal(e.global).x) / squareSize) * squareSize
+        const y = Math.floor(containerRef.current.toLocal(e.global).y / squareSize) * squareSize
+        if(cursorRef.current) cursorRef.current.position = {x: x, y: y};
+    }
+
+    //mouse hover square
+    const mouseHover = useCallback((g) => {
+        g.clear();
+        g.lineStyle(3, 0x0066ff, 1, 0);
+        g.drawRect(0, 0, squareSize, squareSize)
+    },[])
 
     //draw grid and border
     const draw = useCallback((g) => {
@@ -31,7 +48,7 @@ function Tieup({ draft, updateDraft, squareSize, x, y }) {
     }, [draft]);    
 
     return(
-        <Container width={draft.Pedals * squareSize} height={draft.Shafts * squareSize} x={x} y={y} options={{ backgroundColor: 0xFFFFFF }}>
+        <Container ref={containerRef} width={draft.Pedals * squareSize} height={draft.Shafts * squareSize} x={x} y={y} options={{ backgroundColor: 0xFFFFFF }} eventMode='static' onmouseenter={()=>setHovered(true)} onmouseleave={()=>setHovered(false)} onmousemove={handleMove}>
             {draft.Tieup.map((row, i) => (
                 row.map((cell, j) => (
                     <Sprite
@@ -48,6 +65,7 @@ function Tieup({ draft, updateDraft, squareSize, x, y }) {
                 ))
             ))}
             <Graphics draw={draw}/>
+            {hovered && <Graphics ref={cursorRef} draw={mouseHover}/>}
         </Container>
     );
 }
