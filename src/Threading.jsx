@@ -46,7 +46,7 @@ function Threading({ draft, updateDraft, currentColor, squareSize, x, y }) {
         }
         g.lineStyle(2, 0x00000);
         g.drawRect(0, 0, draft.Warp * squareSize, squareSize)
-    }, []);    
+    }, [draft]);    
     
     const drawThreadGrid = useCallback((g) => {
         g.clear();
@@ -61,7 +61,7 @@ function Threading({ draft, updateDraft, currentColor, squareSize, x, y }) {
         }
         g.lineStyle(2, 0x00000);
         g.drawRect(0, 0, draft.Warp * squareSize, draft.Shafts * squareSize)
-    }, []); 
+    }, [draft]); 
 
     return (
         <Container width={draft.Warp * squareSize} height={(draft.Shafts + 2) * squareSize} x={x} y={y} options={{ backgroundColor: 0xFFFFFF }}>

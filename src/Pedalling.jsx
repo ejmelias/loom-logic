@@ -48,7 +48,7 @@ function Pedalling({ draft, updateDraft, currentColor, multi, squareSize, x, y }
         }
         g.lineStyle(2, 0x00000);
         g.drawRect(0, 0, squareSize, draft.Weft * squareSize)
-    }, []);    
+    }, [draft]);    
     
     const drawPedalGrid = useCallback((g) => {
         g.clear();
@@ -63,7 +63,8 @@ function Pedalling({ draft, updateDraft, currentColor, multi, squareSize, x, y }
         }
         g.lineStyle(2, 0x00000);
         g.drawRect(0, 0, draft.Pedals * squareSize, draft.Weft * squareSize)
-    }, []); 
+        console.log(draft.Pedals);
+    }, [draft]); 
 
     return (
         <Container width={(draft.Pedals + 2) * squareSize} height={draft.Weft * squareSize} x={x} y={y} options={{ backgroundColor: 0xFFFFFF }}>

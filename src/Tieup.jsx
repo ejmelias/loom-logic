@@ -19,16 +19,16 @@ function Tieup({ draft, updateDraft, squareSize, x, y }) {
         g.clear();
         g.lineStyle(1, 0x00000);
         for(let i = 1; i < draft.Shafts; i++) {
+            g.moveTo(0, squareSize * i);
+            g.lineTo(draft.Pedals * squareSize, squareSize * i);
+        }
+        for(let i = 1; i < draft.Pedals; i++) {
             g.moveTo(squareSize * i, 0);
             g.lineTo(squareSize * i, draft.Shafts * squareSize);
         }
-        for(let i = 1; i < draft.Pedals; i++) {
-            g.moveTo(0, squareSize * i);
-            g.lineTo(draft.Shafts * squareSize, squareSize * i);
-        }
         g.lineStyle(2, 0x00000);
         g.drawRect(0, 0, draft.Pedals * squareSize, draft.Shafts * squareSize)
-    }, []);    
+    }, [draft]);    
 
     return(
         <Container width={draft.Pedals * squareSize} height={draft.Shafts * squareSize} x={x} y={y} options={{ backgroundColor: 0xFFFFFF }}>

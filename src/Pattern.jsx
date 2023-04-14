@@ -22,14 +22,14 @@ function Pattern({ draft, grid, squareSize, x, y }) {
             g.moveTo(0, squareSize * i);
             g.lineTo(draft.Warp * squareSize, squareSize * i);
         }
-    }, []);
+    }, [draft]);
 
     //draw border
     const border = useCallback((g) => {
         g.clear();
         g.lineStyle(2, 0x00000);
         g.drawRect(0, 0, draft.Warp * squareSize, draft.Weft * squareSize)
-    }, []);
+    }, [draft]);
 
     return ( 
         <Container width={draft.Warp * squareSize} height={draft.Weft * squareSize} x={x} y={y} options={{ backgroundColor: 0xFFFFFF }}>

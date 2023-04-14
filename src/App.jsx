@@ -16,8 +16,8 @@ import Title from './Title';
 
 const SHAFT_VALUES = [4, 8, 12, 16, 24, 32];
 const PEDAL_VALUES = [4, 6, 8, 10, 12, 14];
-const MAX_WIDTH = 64;
-const MAX_HEIGHT = 64;
+const MAX_WIDTH = 164;
+const MAX_HEIGHT = 164;
 const SQUARE_SIZE = 20;
 
 const initialDraft = {
@@ -38,12 +38,11 @@ function App() {
     const [showGrid, setShowGrid] = useState(true);
     const [multipedalling, setMultipedaling] = useState(true);
     const [currentColor, setCurrentColor] = useState('#7c3aed');
-
     const [draft, updateDraft] = useImmer(initialDraft);
 
     return (
-        <div className='grid grid-flow-col-dense w-screen h-screen bg-gray-200 ' onDragStart={(e) => {e.preventDefault()}} draggable={false}>
-            <div className='m-2 p-2 border rounded-md justify-center border-gray-300 bg-gray-50 shadow-sm max-w-fit'>
+        <div className='grid grid-flow-col-dense w-screen h-screen bg-gray-50 ' onDragStart={(e) => {e.preventDefault()}} draggable={false}>
+            <div className='p-2 border-r justify-center border-gray-500 bg-slate-200 shadow-sm max-w-fit'>
                 <Title draft={draft} updateDraft={updateDraft} />
                 <div><ShaftSelector draft={draft} updateDraft={updateDraft} values={SHAFT_VALUES}/></div>
                 <div><PedalSelector draft={draft} updateDraft={updateDraft} values={PEDAL_VALUES}/></div>
@@ -56,12 +55,14 @@ function App() {
                 <SaveWIFButton draft={draft}/>
                 <DownloadPDFButton draft={draft}/>
             </div>
-            <Stage width={(draft.Warp + draft.Pedals + 6) * SQUARE_SIZE} height={(draft.Weft + draft.Shafts + 6) * SQUARE_SIZE} options={{ backgroundColor: 0xb6bfb8 }}>
-                <Threading draft={draft} updateDraft={updateDraft} currentColor={currentColor} squareSize={SQUARE_SIZE} x={SQUARE_SIZE} y={SQUARE_SIZE}/>
-                <Tieup draft={draft} updateDraft={updateDraft} squareSize={SQUARE_SIZE} x={(draft.Warp + 2) * SQUARE_SIZE} y={3 * SQUARE_SIZE}/>
-                <Pedalling draft={draft} updateDraft={updateDraft} currentColor={currentColor} multi={multipedalling} squareSize={SQUARE_SIZE} x={(draft.Warp + 2) * SQUARE_SIZE} y={(draft.Shafts + 4) * SQUARE_SIZE}/>
-                <Pattern draft={draft} grid={showGrid} squareSize={SQUARE_SIZE} x={SQUARE_SIZE} y={(draft.Shafts + 4) * SQUARE_SIZE} />
-            </Stage>
+            <div className='overflow-auto'>
+                <Stage width={(draft.Warp + draft.Pedals + 6) * SQUARE_SIZE} height={(draft.Weft + draft.Shafts + 6) * SQUARE_SIZE} options={{ backgroundColor: 0xf3f4f6 }}>
+                    <Threading draft={draft} updateDraft={updateDraft} currentColor={currentColor} squareSize={SQUARE_SIZE} x={SQUARE_SIZE} y={SQUARE_SIZE}/>
+                    <Tieup draft={draft} updateDraft={updateDraft} squareSize={SQUARE_SIZE} x={(draft.Warp + 2) * SQUARE_SIZE} y={3 * SQUARE_SIZE}/>
+                    <Pedalling draft={draft} updateDraft={updateDraft} currentColor={currentColor} multi={multipedalling} squareSize={SQUARE_SIZE} x={(draft.Warp + 2) * SQUARE_SIZE} y={(draft.Shafts + 4) * SQUARE_SIZE}/>
+                    <Pattern draft={draft} grid={showGrid} squareSize={SQUARE_SIZE} x={SQUARE_SIZE} y={(draft.Shafts + 4) * SQUARE_SIZE} />
+                </Stage>
+            </div>
         </div>
     )
 }
