@@ -20,15 +20,15 @@ const MAX_HEIGHT = 64;
 
 const initialDraft = {
     Title: "Untitled-draft",
-    Warp: 48, //width 
-    Weft: 50, //height
+    Warp: 64, //width 
+    Weft: 64, //height
     Shafts: 4,
     Pedals: 4,
-    Threading: Array.from({ length: 4 }, () => Array.from({ length: 48 }).fill(0)),
+    Threading: Array.from({ length: 4 }, () => Array.from({ length: 64 }).fill(0)),
     Tieup: Array.from({ length: 4 }, () => Array.from({ length: 4 }).fill(0)),
-    Pedalling: Array.from({ length: 50 }, () => Array.from({ length: 4 }).fill(0)),
-    ThreadColors: Array.from({ length: 48 }).fill('#7c3aed'),
-    PedalColors: Array.from({ length: 50 }).fill('#FFFFFF'),
+    Pedalling: Array.from({ length: 64 }, () => Array.from({ length: 4 }).fill(0)),
+    ThreadColors: Array.from({ length: 64 }).fill('#7c3aed'),
+    PedalColors: Array.from({ length: 64 }).fill('#FFFFFF'),
 }
 
 function App() {
