@@ -1,4 +1,8 @@
-function Tieup({ draft, updateDraft }) {
+import { Container, Sprite, Graphics } from '@pixi/react';
+import { useCallback } from 'react';
+import * as PIXI from 'pixi.js'
+
+function Tieup({ draft, updateDraft, squareSize, x, y }) {
 
     function handleTieupClick(id) {
         updateDraft(draft => {
@@ -10,22 +14,41 @@ function Tieup({ draft, updateDraft }) {
         });
     }
 
-    return (
-        <div>
-            <div className='max-w-max m-2 grid grid-flow-row auto-rows-max border border-black '>
-                {draft.Tieup.map((row, i) => (
-                    <div key={i} className="grid grid-flow-col auto-cols-max">
-                        {row.map((cell, j) => (
-                            <div 
-                                key={[i,j]}
-                                className={`w-5 h-5 border-black border-[0.5px] hover:ring-4 hover:ring-blue-500/75 hover:z-50 ${cell === 1 ? 'bg-black' : 'bg-white'}`}
-                                onClick={() => handleTieupClick([i,j])}
-                            />
-                        ))}
-                    </div>
-                ))}
-            </div>
-        </div>
+    //draw grid and border
+    const draw = useCallback((g) => {
+        g.clear();
+        g.lineStyle(1, 0x00000);
+        for(let i = 1; i < draft.Shafts; i++) {
+            g.moveTo(squareSize * i, 0);
+            g.lineTo(squareSize * i, draft.Shafts * squareSize);
+        }
+        for(let i = 1; i < draft.Pedals; i++) {
+            g.moveTo(0, squareSize * i);
+            g.lineTo(draft.Shafts * squareSize, squareSize * i);
+        }
+        g.lineStyle(2, 0x00000);
+        g.drawRect(0, 0, draft.Pedals * squareSize, draft.Shafts * squareSize)
+    }, []);    
+
+    return(
+        <Container width={draft.Pedals * squareSize} height={draft.Shafts * squareSize} x={x} y={y} options={{ backgroundColor: 0xFFFFFF }}>
+            {draft.Tieup.map((row, i) => (
+                row.map((cell, j) => (
+                    <Sprite
+                        key={[i,j]}
+                        texture={PIXI.Texture.WHITE}
+                        width={squareSize}
+                        height={squareSize}
+                        tint={cell === 1 ? 0x000000 : 0xffffff}
+                        x={j * squareSize}
+                        y={i * squareSize}
+                        eventMode="static"
+                        onclick={()=>handleTieupClick([i,j])}
+                    />
+                ))
+            ))}
+            <Graphics draw={draw}/>
+        </Container>
     );
 }
 export default Tieup;

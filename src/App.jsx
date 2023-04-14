@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useImmer } from 'use-immer';
+import { Stage } from '@pixi/react';
 import Pattern from './Pattern'
 import Toggle from './Toggle'
 import ColorPicker from './ColorPicker';
@@ -17,6 +18,7 @@ const SHAFT_VALUES = [4, 8, 12, 16, 24, 32];
 const PEDAL_VALUES = [4, 6, 8, 10, 12, 14];
 const MAX_WIDTH = 64;
 const MAX_HEIGHT = 64;
+const SQUARE_SIZE = 20;
 
 const initialDraft = {
     Title: "Untitled-draft",
@@ -54,16 +56,12 @@ function App() {
                 <SaveWIFButton draft={draft}/>
                 <DownloadPDFButton draft={draft}/>
             </div>
-            <div className="overflow-auto p-5">
-                <div className='grid grid-flow-col auto-cols-max' >
-                    <Threading draft={draft} updateDraft={updateDraft} currentColor={currentColor} />
-                    <div className='self-end'><Tieup draft={draft} updateDraft={updateDraft} /></div>
-                </div>
-                <div className='grid grid-flow-col auto-cols-max' >
-                    <Pattern draft={draft} grid={showGrid}/>
-                    <Pedalling draft={draft} updateDraft={updateDraft} currentColor={currentColor} multi={multipedalling} />
-                </div>
-            </div>
+            <Stage width={(draft.Warp + draft.Pedals + 6) * SQUARE_SIZE} height={(draft.Weft + draft.Shafts + 6) * SQUARE_SIZE} options={{ backgroundColor: 0xb6bfb8 }}>
+                <Threading draft={draft} updateDraft={updateDraft} currentColor={currentColor} squareSize={SQUARE_SIZE} x={SQUARE_SIZE} y={SQUARE_SIZE}/>
+                <Tieup draft={draft} updateDraft={updateDraft} squareSize={SQUARE_SIZE} x={(draft.Warp + 2) * SQUARE_SIZE} y={3 * SQUARE_SIZE}/>
+                <Pedalling draft={draft} updateDraft={updateDraft} currentColor={currentColor} multi={multipedalling} squareSize={SQUARE_SIZE} x={(draft.Warp + 2) * SQUARE_SIZE} y={(draft.Shafts + 4) * SQUARE_SIZE}/>
+                <Pattern draft={draft} grid={showGrid} squareSize={SQUARE_SIZE} x={SQUARE_SIZE} y={(draft.Shafts + 4) * SQUARE_SIZE} />
+            </Stage>
         </div>
     )
 }

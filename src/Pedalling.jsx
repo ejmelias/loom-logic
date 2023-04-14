@@ -1,16 +1,18 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useCallback } from 'react';
+import { Container, Graphics, Sprite } from '@pixi/react';
+import * as PIXI from 'pixi.js'
 
-function Pedalling({ draft, updateDraft, currentColor, multi }) {
+function Pedalling({ draft, updateDraft, currentColor, multi, squareSize, x, y }) {
 
     const [isMouseDown, setIsMouseDown] = useState(false);
     const colorRef = useRef()
 
     function handleColorDrag(event) {
-        if (isMouseDown) {
+        if (isMouseDown) { /*
             const row = Math.floor((event.nativeEvent.clientY - colorRef.current.getBoundingClientRect().top) / 20);
             if(row < draft.PedalColors.length) {
                 updateDraft(draft => { draft.PedalColors[row] = currentColor });
-            }
+            }*/
         }
     }
 
@@ -36,38 +38,79 @@ function Pedalling({ draft, updateDraft, currentColor, multi }) {
         });
     }
 
+    //draw grid and border
+    const drawColorGrid = useCallback((g) => {
+        g.clear();
+        g.lineStyle(1, 0x00000);
+        for(let i = 1; i < draft.Weft; i++) {
+            g.moveTo(0, squareSize * i);
+            g.lineTo(squareSize, squareSize * i);
+        }
+        g.lineStyle(2, 0x00000);
+        g.drawRect(0, 0, squareSize, draft.Weft * squareSize)
+    }, []);    
+    
+    const drawPedalGrid = useCallback((g) => {
+        g.clear();
+        g.lineStyle(1, 0x00000);
+        for(let i = 1; i < draft.Pedals; i++) {
+            g.moveTo(squareSize * i, 0);
+            g.lineTo(squareSize * i, draft.Weft * squareSize);
+        }
+        for(let i = 1; i < draft.Weft; i++) {
+            g.moveTo(0, squareSize * i);
+            g.lineTo(draft.Pedals * squareSize, squareSize * i);
+        }
+        g.lineStyle(2, 0x00000);
+        g.drawRect(0, 0, draft.Pedals * squareSize, draft.Weft * squareSize)
+    }, []); 
+
     return (
-        <div className="grid grid-flow-col auto-cols-max">
-            <div className='max-w-max m-2 grid grid-flow-row auto-rows-max border border-black'>
-                {draft.Pedalling.map((row, i) => (
-                    <div key={i} className="grid grid-flow-col auto-cols-max">
-                        {row.map((cell, j) => (
-                            <div 
-                                key={[i,j]}
-                                className={`w-5 h-5 border-black border-[0.5px] hover:ring-4 hover:ring-blue-500/75 hover:z-50 ${cell === 1 ? 'bg-black' : 'bg-white'}`}
-                                onClick={() => handlePedalClick([i,j])}
-                            />
-                        ))}
-                    </div>
-                ))}
-            </div>
-            <div className="grid-flow-row auto-rows-max max-w-max m-2 grid border border-black"
-                onPointerDown={() => setIsMouseDown(true)}
-                onPointerUp={() => setIsMouseDown(false)}
-                onPointerMove={handleColorDrag}
-                onPointerLeave={() => {setIsMouseDown(false)}}
-                ref={colorRef}
+        <Container width={(draft.Pedals + 2) * squareSize} height={draft.Weft * squareSize} x={x} y={y} options={{ backgroundColor: 0xFFFFFF }}>
+            <Container 
+                width={squareSize} 
+                height={draft.Weft * squareSize} x={(draft.Pedals + 1) * squareSize} y={0} 
+                options={{ backgroundColor: 0xFFFFFF }}
+                eventMode="static"
+                onpointerdown={() => setIsMouseDown(true)}
+                onpointerup={() => setIsMouseDown(false)}
+                onpointermove={handleColorDrag}
+                onpointerleave={() => {setIsMouseDown(false)}}
             >
                 {draft.PedalColors.map((cell, i) => (
-                    <div 
+                    <Sprite
                         key={i}
-                        className={'border-black border-[0.5px] hover:ring-4 hover:ring-blue-500/75 hover:z-50 w-5 h-5'}
-                        style={{ backgroundColor: cell}}
-                        onClick={()=>handleColorClick(i)}
+                        texture={PIXI.Texture.WHITE}
+                        width={squareSize}
+                        height={squareSize}
+                        tint={cell}
+                        x={0}
+                        y={i * squareSize}
+                        eventMode="static"
+                        onclick={()=>handleColorClick(i)}
                     />
                 ))}
-            </div>
-        </div>
-    );
+                <Graphics draw={drawColorGrid} />
+            </Container>
+            <Container width={draft.Pedals * squareSize} height={draft.Weft * squareSize} x={0} y={0} options={{ backgroundColor: 0xFFFFFF }}>
+                {draft.Pedalling.map((row, i) => (
+                    row.map((cell, j) => (
+                        <Sprite
+                            key={[i,j]}
+                            texture={PIXI.Texture.WHITE}
+                            width={squareSize}
+                            height={squareSize}
+                            tint={cell === 1 ? 0x000000 : 0xffffff}
+                            x={j * squareSize}
+                            y={i * squareSize}
+                            eventMode="static"
+                            onclick={()=>handlePedalClick([i,j])}
+                        />
+                    ))
+                ))}
+                <Graphics draw={drawPedalGrid} />
+            </Container>
+        </Container>
+    );    
 }
 export default Pedalling;

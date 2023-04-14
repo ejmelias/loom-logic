@@ -84,7 +84,8 @@ function SaveWIFButton({ draft }) {
 
         const data = base.concat(tieup, threading, treadling, colorTable, warpColors, weftColors);
         const blob = new Blob([data]);
-        saveAs(blob, `${draft.Title}.wif`);
+        const date = new Date();
+        saveAs(blob, `${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()}.wif`);
     }
 
     return (
