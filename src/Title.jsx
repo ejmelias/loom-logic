@@ -27,7 +27,7 @@ function Title({ draft, updateDraft }) {
             </div>
             {isOpen &&
             <div className="absolute top-5">
-                <form onSubmit={handleSubmit} className="flex items-center bg-violet-600 rounded-md">
+                <form onSubmit={handleSubmit} className="flex items-center bg-violet-600 rounded-md border border-gray-300">
                     <label className="text-white">
                         <span className="m-2">New title:</span>
                         <input className="text-black p-1" name="title" type="text" defaultValue={draft.Title}/>

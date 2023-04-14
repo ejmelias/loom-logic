@@ -47,7 +47,7 @@ function LoadWIFButton ({ draft, updateDraft, maxHeight, maxWidth }) {
                 if(data.TREADLING) {
                     for(let i = 1; i <= weft; i++) {
                         if(data.TREADLING[i]) {
-                            pedalling[Math.abs(i - weft)][Math.abs(data.TREADLING[i] - pedals)] = 1;
+                            pedalling[i-1][data.TREADLING[i] - 1] = 1;
                         }
                     }
                 }
@@ -73,11 +73,11 @@ function LoadWIFButton ({ draft, updateDraft, maxHeight, maxWidth }) {
                         if(data["WEFT COLORS"][i]) {
                             const rgb = data["COLOR TABLE"][data["WEFT COLORS"][i]].split(',');
                             const rgb255 = rgb.map(item => (item / range[1]) * 255)
-                            pedalColors[Math.abs(i - weft)] = "rgb("+rgb255.join(",")+")";
+                            pedalColors[i-1] = "rgb("+rgb255.join(",")+")";
                         }
                     }
                 }
-                
+                console.log(pedalling);
                 updateDraft(draft => {
                     draft.Warp = warp;
                     draft.Weft = weft;
