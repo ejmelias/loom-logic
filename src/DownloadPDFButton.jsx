@@ -1,4 +1,4 @@
-import { pdf, Document, Page, Text, StyleSheet, Canvas } from '@react-pdf/renderer';
+import { pdf, Document, Page, Text, StyleSheet, Canvas, Image } from '@react-pdf/renderer';
 import { saveAs } from 'file-saver';
 import { multiply, transpose } from "mathjs";
 
@@ -27,16 +27,16 @@ function DownloadPDFButton ({ draft }) {
         const threading = JSON.parse(JSON.stringify(draft.Threading));
         const pattern = multiply(multiply(pedalling, transpose(tieup)), threading)
 
-        const size = (pattern[0].length + pedalling[0].length) * 0.125;
+        const size = 10 / ((draft.Warp + draft.Pedals) * 0.0137);
         const paint = (painterObject) => {
 
-            for(let i = 0; i < draft.ThreadColors.length; i++) {
+            for(let i = 0; i < draft.Warp; i++) {
                 painterObject.rect(i * size, 0, size, size).fillAndStroke(draft.ThreadColors[i], 'black').lineWidth(0.5);
             }
 
-            for(let i = 0; i < threading.length; i++) {
-                for(let j = 0; j < threading[i].length; j++) {
-                    if(threading[i][j] > 0) {
+            for(let i = 0; i < draft.Shafts; i++) {
+                for(let j = 0; j < draft.Warp; j++) {
+                    if(draft.Threading[i][j] > 0) {
                         painterObject.rect(j * size, (i * size) + (2 * size), size, size).fillAndStroke('black', 'black').lineWidth(0.5);
                     } else {
                         painterObject.rect(j * size, (i * size) + (2 * size), size, size).stroke('black').lineWidth(0.5);
@@ -44,12 +44,12 @@ function DownloadPDFButton ({ draft }) {
                 }
             }
 
-            for(let i = 0; i < pattern.length; i++) {
-                for(let j = 0; j < pattern[i].length; j++) {
+            for(let i = 0; i < draft.Weft; i++) {
+                for(let j = 0; j < draft.Warp; j++) {
                     if(pattern[i][j] > 0) {
-                        painterObject.rect(j * size, (i * size) + (7 * size), size, size).fillAndStroke(draft.ThreadColors[j], 'gray').lineWidth(0.5);
+                        painterObject.rect(j * size, (i * size) + ((draft.Shafts + 3) * size), size, size).fillAndStroke(draft.ThreadColors[j], 'gray').lineWidth(0.5);
                     } else {
-                        painterObject.rect(j * size, (i * size) + (7 * size), size, size).fillAndStroke(draft.PedalColors[j], 'gray').lineWidth(0.5);
+                        painterObject.rect(j * size, (i * size) + ((draft.Shafts + 3)  * size), size, size).fillAndStroke(draft.PedalColors[j], 'gray').lineWidth(0.5);
                     }
                 }
             }
@@ -81,7 +81,7 @@ function DownloadPDFButton ({ draft }) {
         const blob = await pdf(
             (
                 <Document>
-                    <Page>
+                    <Page wrap orientation='landscape'>
                         <Canvas 
                             style={styles.canvas}
                             paint={paint}

@@ -3,7 +3,7 @@ import { saveAs } from 'file-saver';
 function SaveWIFButton({ draft }) {
 
     function hexToRgb(hex) {
-        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
         return `${parseInt(result[1], 16).toString()},${parseInt(result[2], 16).toString()},${parseInt(result[3], 16).toString()}`
     }
 
@@ -64,6 +64,7 @@ function SaveWIFButton({ draft }) {
         let colorTable = '\n[COLOR TABLE]\n';
         let colorTableObj = {}
         let index = 1;
+        console.log(combined)
         for(const item of combined){
             colorTableObj[item] = index;
             colorTable += `${index}=${hexToRgb(item)}\n`;

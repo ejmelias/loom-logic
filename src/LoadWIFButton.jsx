@@ -2,6 +2,15 @@ import { decodeINI } from './ini'
 
 function LoadWIFButton ({ draft, updateDraft, maxHeight, maxWidth }) {
 
+    function componentToHex(c) {
+        const hex = Math.floor(c).toString(16);
+        return hex.length == 1 ? "0" + hex : hex;
+    }
+      
+    function rgbToHex([r, g, b]) {
+        return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+    }
+
     const readFile = async (e) => {
 
         const file = e.target.files[0];
@@ -11,8 +20,6 @@ function LoadWIFButton ({ draft, updateDraft, maxHeight, maxWidth }) {
             const data = decodeINI(e.target.result);
 
             try {
-                console.log(data)
-
                 const shafts = parseInt(data.WEAVING.Shafts);
                 const pedals = parseInt(data.WEAVING.Treadles);
                 const warp = (parseInt(data.WARP.Threads) > maxWidth ? maxWidth : parseInt(data.WARP.Threads))
@@ -60,7 +67,7 @@ function LoadWIFButton ({ draft, updateDraft, maxHeight, maxWidth }) {
                         if(data["WARP COLORS"][i]) {
                             const rgb = data["COLOR TABLE"][data["WARP COLORS"][i]].split(',');
                             const rgb255 = rgb.map(item => (item / range[1]) * 255)
-                            threadColors[Math.abs(i - warp)] = "rgb("+rgb255.join(",")+")";
+                            threadColors[Math.abs(i - warp)] = rgbToHex(rgb255);
                         }
                     }
                 }
@@ -73,11 +80,11 @@ function LoadWIFButton ({ draft, updateDraft, maxHeight, maxWidth }) {
                         if(data["WEFT COLORS"][i]) {
                             const rgb = data["COLOR TABLE"][data["WEFT COLORS"][i]].split(',');
                             const rgb255 = rgb.map(item => (item / range[1]) * 255)
-                            pedalColors[i-1] = "rgb("+rgb255.join(",")+")";
+                            pedalColors[i-1] = rgbToHex(rgb255);
                         }
                     }
                 }
-                console.log(pedalling);
+
                 updateDraft(draft => {
                     draft.Warp = warp;
                     draft.Weft = weft;

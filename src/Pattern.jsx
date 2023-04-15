@@ -46,7 +46,7 @@ function Pattern({ draft, grid, squareSize, x, y }) {
                     />
                 ))
             ))}
-            {grid && <Graphics draw={lines}/>}
+            <Graphics draw={lines} alpha={grid ? 1 : 0}/>
             <Graphics draw={border}/>
         </Container>
     );

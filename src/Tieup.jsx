@@ -7,6 +7,7 @@ function Tieup({ draft, updateDraft, squareSize, x, y }) {
     const [hovered, setHovered] = useState(false);
     const cursorRef = useRef();
     const containerRef = useRef();
+    
 
     function handleTieupClick(id) {
         updateDraft(draft => {

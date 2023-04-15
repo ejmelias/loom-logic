@@ -4,7 +4,7 @@ import { Stage } from '@pixi/react';
 import Pattern from './Pattern'
 import Toggle from './Toggle'
 import ColorPicker from './ColorPicker';
-import DownloadPDFButton from './DownloadPDFButton';
+import SaveImageButton from './SaveImageButton';
 import LoadWIFButton from './LoadWIFButton';
 import SaveWIFButton from './SaveWIFButton';
 import Threading from './Threading';
@@ -31,6 +31,7 @@ const initialDraft = {
     Pedalling: Array.from({ length: 64 }, () => Array.from({ length: 4 }).fill(0)),
     ThreadColors: Array.from({ length: 64 }).fill('#7c3aed'),
     PedalColors: Array.from({ length: 64 }).fill('#FFFFFF'),
+    App: {}
 }
 
 function App() {
@@ -53,10 +54,10 @@ function App() {
                 </div>
                 <LoadWIFButton draft={draft} updateDraft={updateDraft} maxWidth={MAX_WIDTH} maxHeight={MAX_HEIGHT} />
                 <SaveWIFButton draft={draft}/>
-                <DownloadPDFButton draft={draft}/>
+                <SaveImageButton draft={draft}/>
             </div>
             <div className='overflow-auto'>
-                <Stage width={(draft.Warp + draft.Pedals + 6) * SQUARE_SIZE} height={(draft.Weft + draft.Shafts + 6) * SQUARE_SIZE} options={{ backgroundColor: 0xf3f4f6 }}>
+                <Stage id={'canvas'} width={(draft.Warp + draft.Pedals + 6) * SQUARE_SIZE} height={(draft.Weft + draft.Shafts + 6) * SQUARE_SIZE} options={{ backgroundColor: 0xf3f4f6, preserveDrawingBuffer: true }}>
                     <Threading draft={draft} updateDraft={updateDraft} currentColor={currentColor} squareSize={SQUARE_SIZE} x={SQUARE_SIZE} y={SQUARE_SIZE}/>
                     <Tieup draft={draft} updateDraft={updateDraft} squareSize={SQUARE_SIZE} x={(draft.Warp + 2) * SQUARE_SIZE} y={3 * SQUARE_SIZE}/>
                     <Pedalling draft={draft} updateDraft={updateDraft} currentColor={currentColor} multi={multipedalling} squareSize={SQUARE_SIZE} x={(draft.Warp + 2) * SQUARE_SIZE} y={(draft.Shafts + 4) * SQUARE_SIZE}/>
