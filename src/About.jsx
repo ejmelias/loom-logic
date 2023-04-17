@@ -18,7 +18,7 @@ function About() {
                 <button
                 type="button"
                 onClick={openModal}
-                className="rounded-md h-8 bg-black bg-opacity-20 px-4 font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
+                className="rounded-md h-8  px-4 font-medium text-black/30 underline"
                 >
                     About
                 </button>
@@ -58,7 +58,7 @@ function About() {
                                     </Dialog.Title>
                                     <div className="mt-2">
                                         <p className="text-sm text-gray-500">
-                                            I created this website with the goal of providing a free and simple way for weavers to create, view and edit weaving drafts.
+                                            I created Loom Logic with the goal of providing a free and simple way for weavers to create, view and edit weaving drafts.
                                         </p>
                                         <br/>
                                         <p className="text-sm text-gray-500">
@@ -67,11 +67,7 @@ function About() {
                                         </p>
                                         <br/>
                                         <p className="text-sm text-gray-500">
-                                            If you are interested in the source code for this project, the GitHub repo can viewed <a href="https://github.com/ejmelias/weaving-draft" target="_blank" rel="noopener noreferrer" className='text-blue-500'>here</a>
-                                        </p>
-                                        <br/>
-                                        <p className="text-sm text-gray-500">
-                                            -James
+                                            If you are interested in the source code for this project, it can be viewed <a href="https://github.com/ejmelias/weaving-draft" target="_blank" rel="noopener noreferrer" className='text-blue-500'>here</a>
                                         </p>
                                     </div>
 
