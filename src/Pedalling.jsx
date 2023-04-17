@@ -2,27 +2,33 @@ import { useRef, useState, useCallback } from 'react';
 import { Container, Graphics, Sprite } from '@pixi/react';
 import * as PIXI from 'pixi.js'
 
-function Pedalling({ draft, updateDraft, currentColor, multi, squareSize, x, y }) {
+function Pedalling({ draft, updateDraft, currentColor, multi, squareSize, x, y, insertMode, removeMode, maxPedalling }) {
 
     const [isMouseDown, setIsMouseDown] = useState(false);
     const colorRef = useRef()
     const cursorRef = useRef();
+    const subCursorRef = useRef();
+    const addCursorRef = useRef();
     const containerRef = useRef();
     const [hovered, setHovered] = useState(false);
 
     function handleColorDrag(event) {
-        if (isMouseDown) { /*
+        /*if (isMouseDown) { 
             const row = Math.floor((event.nativeEvent.clientY - colorRef.current.getBoundingClientRect().top) / 20);
             if(row < draft.PedalColors.length) {
                 updateDraft(draft => { draft.PedalColors[row] = currentColor });
-            }*/
-        }
+            }
+        }*/
     }
 
     function handleMove(e) {
         const x = Math.floor(containerRef.current.toLocal(e.global).x / squareSize) * squareSize
         const y = Math.floor(containerRef.current.toLocal(e.global).y / squareSize) * squareSize
-        if(cursorRef.current) cursorRef.current.position = {x: x, y: y};
+        if(x >= 0) {
+            cursorRef.current.position = {x: x, y: y};
+        }
+        subCursorRef.current.position = {x: 0, y: y};
+        addCursorRef.current.position = {x: 0, y: Math.round(containerRef.current.toLocal(e.global).y / squareSize) * squareSize}
     }
 
     function handleColorClick(id) {
@@ -31,24 +37,50 @@ function Pedalling({ draft, updateDraft, currentColor, multi, squareSize, x, y }
 
     function handlePedalClick(id) {
         updateDraft(draft => {
-            
-            if(!multi) {
-                for(let i = 0; i < draft.Pedalling[0].length; i++) {
-                    if(i !== id[1]) {
-                        draft.Pedalling[id[0]][i] = 0;
+            if(removeMode) {
+                if(draft.Weft > 1) {
+                    draft.Pedalling.splice(id[0], 1);
+                    draft.PedalColors.splice(id[0], 1);
+                    draft.Weft--;
+                }
+            } else if (insertMode) {
+                if(draft.Weft < maxPedalling) {
+                    draft.Pedalling.splice(addCursorRef.current.position.y / squareSize, 0, Array.from({ length: draft.Pedals }).fill(0));
+                    draft.PedalColors.splice(addCursorRef.current.position.y / squareSize, 0, currentColor);
+                    draft.Weft++;
+                }
+            } else {     
+                if(!multi) {
+                    for(let i = 0; i < draft.Pedalling[0].length; i++) {
+                        if(i !== id[1]) {
+                            draft.Pedalling[id[0]][i] = 0;
+                        }
                     }
                 }
-            }
-            if(draft.Pedalling[id[0]][id[1]] === 0) {
-                draft.Pedalling[id[0]][id[1]] = 1;
-            } else {
-                draft.Pedalling[id[0]][id[1]] = 0;
+                if(draft.Pedalling[id[0]][id[1]] === 0) {
+                    draft.Pedalling[id[0]][id[1]] = 1;
+                } else {
+                    draft.Pedalling[id[0]][id[1]] = 0;
+                }
             }
         });
     }
 
+    const insertModeCursor = useCallback((g) => {
+        g.clear();
+        g.lineStyle(5, 0x00bf1d );
+        g.moveTo(0, 0);
+        g.lineTo(squareSize * draft.Pedals, 0);
+    },[draft.Pedals])
+
+    const removeModeCursor = useCallback((g) => {
+        g.clear();
+        g.lineStyle(3, 0xfc031c, 1);
+        g.drawRect(0, 0, squareSize * draft.Pedals, squareSize)
+    },[draft.Pedals])
+
     //mouse hover square
-    const mouseHover = useCallback((g) => {
+    const normalCursor = useCallback((g) => {
         g.clear();
         g.lineStyle(3, 0x0066ff, 1);
         g.drawRect(0, 0, squareSize, squareSize)
@@ -127,7 +159,9 @@ function Pedalling({ draft, updateDraft, currentColor, multi, squareSize, x, y }
                     ))
                 ))}
                 <Graphics draw={drawPedalGrid} />
-                <Graphics ref={cursorRef} draw={mouseHover} alpha={hovered ? 1 : 0}/>
+                <Graphics ref={cursorRef} draw={normalCursor} alpha={(hovered && !removeMode && !insertMode) ? 1 : 0}/>
+                <Graphics ref={subCursorRef} draw={removeModeCursor} alpha={(hovered && removeMode) ? 1 : 0}/>
+                <Graphics ref={addCursorRef} draw={insertModeCursor} alpha={(hovered && insertMode) ? 1 : 0}/>
             </Container>
         </Container>
     );    

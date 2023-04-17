@@ -22,7 +22,7 @@ function Tieup({ draft, updateDraft, squareSize, x, y }) {
     function handleMove(e) {
         const x = Math.floor(Math.abs(containerRef.current.toLocal(e.global).x) / squareSize) * squareSize
         const y = Math.floor(containerRef.current.toLocal(e.global).y / squareSize) * squareSize
-        if(cursorRef.current) cursorRef.current.position = {x: x, y: y};
+        cursorRef.current.position = {x: x, y: y};
     }
 
     //mouse hover square
