@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useImmer } from 'use-immer';
 import { Stage } from '@pixi/react';
 import Pattern from './Pattern'
@@ -32,7 +32,6 @@ const initialDraft = {
     Pedalling: Array.from({ length: 64 }, () => Array.from({ length: 4 }).fill(0)),
     ThreadColors: Array.from({ length: 64 }).fill('#7c3aed'),
     PedalColors: Array.from({ length: 64 }).fill('#FFFFFF'),
-    App: {}
 }
 
 function App() {
@@ -44,6 +43,15 @@ function App() {
 
     const [insertMode, setInsertMode] = useState(false);
     const [removeMode, setRemoveMode] = useState(false);
+
+
+    useEffect(() => {
+        const handler = event => {
+          event.preventDefault();
+          event.returnValue = '';
+        };
+        window.addEventListener('beforeunload', handler);
+    }, [draft]);
 
     return (
         <div className='grid grid-flow-col-dense w-screen h-screen bg-gray-50 ' onDragStart={(e) => {e.preventDefault()}} draggable={false}>
