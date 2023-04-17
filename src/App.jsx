@@ -13,6 +13,7 @@ import Tieup from './Tieup';
 import ShaftSelector from './ShaftSelector';
 import PedalSelector from './PedalSelector';
 import Title from './Title';
+import About from './About';
 
 const SHAFT_VALUES = [4, 8, 12, 16, 24, 32];
 const PEDAL_VALUES = [4, 6, 8, 10, 12, 14];
@@ -78,6 +79,7 @@ function App() {
                 <LoadWIFButton draft={draft} updateDraft={updateDraft} maxWidth={MAX_WIDTH} maxHeight={MAX_HEIGHT} />
                 <SaveWIFButton draft={draft}/>
                 <SaveImageButton draft={draft}/>
+                <div className='pt-10'><About /></div>
             </div>
             <div className='overflow-auto'>
                 <Stage id={'canvas'} width={(draft.Warp + draft.Pedals + 6) * SQUARE_SIZE} height={(draft.Weft + draft.Shafts + 6) * SQUARE_SIZE} options={{ backgroundColor: 0xf3f4f6, preserveDrawingBuffer: true }}>
